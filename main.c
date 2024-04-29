@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 
-#define VERSION 0.0.3;
+#define VERSION 0.1.1;
 
 struct pokemon {
     char name[40];
@@ -150,7 +151,7 @@ int buyPokemon(struct pokemon *listaPokemons, int pokemonIndex, int *pokemonsInS
     removePokemonFromArray(listaPokemons, pokemonIndex, pokemonsInShop);
 }
 
-int displayPokemonStats(struct pokemon *listaPokemons, int pokemonIndex, int *pokemonsInShop, struct pokemon *pokemonsComprados, int *pokemonsOwned)
+int displayPokemonStats(struct pokemon *listaPokemons, int pokemonIndex, int *pokemonsInShop, struct pokemon *pokemonsComprados, int *pokemonsOwned, bool isBuying)
 {
     int option = -1;
     lineBreak(3);
@@ -164,17 +165,26 @@ int displayPokemonStats(struct pokemon *listaPokemons, int pokemonIndex, int *po
     }
     lineBreak(2);
     
-    printf("-- ¿Qué deseas hacer? --\n");
-    printf("1 .- Comprar\n2 .- Cancelar\n");
-    scanf("%d", &option);
-    switch(option)
+    if (isBuying == true)
     {
-        case 1:
-        buyPokemon(listaPokemons, pokemonIndex, pokemonsInShop, pokemonsComprados, pokemonsOwned);
-        break;
-        
-        default:
-        printf("Cancelando...");
+        printf("-- ¿Qué deseas hacer? --\n");
+        printf("1 .- Comprar\n2 .- Cancelar\n");
+        scanf("%d", &option);
+        switch(option)
+        {
+            case 1:
+            buyPokemon(listaPokemons, pokemonIndex, pokemonsInShop, pokemonsComprados, pokemonsOwned);
+            break;
+            
+            default:
+            printf("Cancelando...");
+        }
+    }
+    else
+    {
+        printf("-- ¿Qué deseas hacer? --\n");
+        printf("1 .- Volver\n");
+        scanf("%d", &option);
     }
 }
 
@@ -214,7 +224,7 @@ int buyPokemonMenu(struct pokemon *listaPokemons, int *pokemonsInShop, struct po
         break;
         
         case 2:
-        displayPokemonStats(listaPokemons, selectedMonIndex, pokemonsInShop, pokemonsComprados, pokemonsOwned);
+        displayPokemonStats(listaPokemons, selectedMonIndex, pokemonsInShop, pokemonsComprados, pokemonsOwned, true);
         break;
         
         default:
@@ -245,8 +255,15 @@ int displayTeam(struct pokemon *equipoPokemon, int *pokemonsInTeam)
 
     lineBreak(1);
     printf("---- ¿Qué deseas hacer? ----\n");
-    printf("1 .- Volver\n");
+    printf("1 .- Ver Estadisticas\n2 .- Volver\n");
     scanf("%d", &option);
+
+    if (option == 1)
+    {
+        printf("-- ¿Qué Pokemon quieres ver? (indica número) --\n");
+        scanf("%d", &option);
+        displayPokemonStats(equipoPokemon, option, pokemonsInTeam, NULL, 0, false);
+    }
 }
 
 int editTeamMenu(struct pokemon *pokemonsComprados, int *pokemonsOwned, struct pokemon *equipoPokemon, int *pokemonsInTeam)
@@ -289,9 +306,18 @@ int editTeamMenu(struct pokemon *pokemonsComprados, int *pokemonsOwned, struct p
 
 void battleSelectAttack(struct pokemon *curPokemon)
 {
+    int attack;
     lineBreak(1);
     printf("--- Selecciona un Ataque ---\n");
-    printf("ataque de %s: %d", curPokemon->name, curPokemon->atk);
+    for (int i = 0; i < 4; i++)
+    {
+        printf("%d .- %s\n", i, curPokemon->moves[i]);
+    }
+
+    scanf("%d", &attack);
+    lineBreak(2);
+    printf("%s", curPokemon->moves[attack]);
+    scanf("%d", &attack);
 }
 
 struct pokemon battleSelectPokemon(struct pokemon *equipoCopy, int *teamSlots)
@@ -332,6 +358,10 @@ void searchBattle(struct pokemon *equipoPokemon, int *pokemonsInTeam)
         equipoCopy[i].atk = equipoPokemon[i].atk;
         equipoCopy[i].def = equipoPokemon[i].def;
         equipoCopy[i].spd = equipoPokemon[i].spd;
+        for (int j = 0; j < 4; j++)
+        {
+            strcpy(equipoCopy[i].moves[j], equipoPokemon[i].moves[j]);
+        }
     }
 
     battle(equipoCopy, &teamSlots, &option);
