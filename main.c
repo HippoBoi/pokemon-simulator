@@ -8,6 +8,7 @@ struct pokemon {
     int atk;
     int def;
     int spd;
+    char moves[4][30];
 };
 
 int min(int a, int b) {
@@ -20,31 +21,55 @@ void defaultPokes(struct pokemon *listaPokemons)
     listaPokemons[0].atk = 30;
     listaPokemons[0].def = 12;
     listaPokemons[0].spd = 40;
+    strcpy(listaPokemons[0].moves[0], "Rock Slide");
+    strcpy(listaPokemons[0].moves[1], "Double Edge");
+    strcpy(listaPokemons[0].moves[2], "Earthquake");
+    strcpy(listaPokemons[0].moves[3], "Hyper Beam");
     
     strcpy(listaPokemons[1].name, "Metagross");
     listaPokemons[1].atk = 42;
     listaPokemons[1].def = 26;
     listaPokemons[1].spd = 12;
+    strcpy(listaPokemons[1].moves[0], "Meteor Mash");
+    strcpy(listaPokemons[1].moves[1], "Thunder Punch");
+    strcpy(listaPokemons[1].moves[2], "Rock Slide");
+    strcpy(listaPokemons[1].moves[3], "Earthquake");
     
     strcpy(listaPokemons[2].name, "Starmie");
     listaPokemons[2].atk = 25;
     listaPokemons[2].def = 25;
     listaPokemons[2].spd = 36;
+    strcpy(listaPokemons[2].moves[0], "Hydro Pump");
+    strcpy(listaPokemons[2].moves[1], "Thunderbolt");
+    strcpy(listaPokemons[2].moves[2], "Rapid Spin");
+    strcpy(listaPokemons[2].moves[3], "Ice Beam");
     
     strcpy(listaPokemons[3].name, "Jolteon");
     listaPokemons[3].atk = 26;
     listaPokemons[3].def = 19;
     listaPokemons[3].spd = 40;
+    strcpy(listaPokemons[3].moves[0], "Thunderbolt");
+    strcpy(listaPokemons[3].moves[1], "Thunder");
+    strcpy(listaPokemons[3].moves[2], "Pin Missile");
+    strcpy(listaPokemons[3].moves[3], "Double Kick");
     
     strcpy(listaPokemons[4].name, "Tyranitar");
     listaPokemons[4].atk = 40;
     listaPokemons[4].def = 22;
     listaPokemons[4].spd = 18;
+    strcpy(listaPokemons[4].moves[0], "Earthquake");
+    strcpy(listaPokemons[4].moves[1], "Crunch");
+    strcpy(listaPokemons[4].moves[2], "Flamethrower");
+    strcpy(listaPokemons[4].moves[3], "Pursuit");
     
     strcpy(listaPokemons[5].name, "Skarmory");
     listaPokemons[5].atk = 14;
     listaPokemons[5].def = 36;
     listaPokemons[5].spd = 21;
+    strcpy(listaPokemons[5].moves[0], "Drill Peck");
+    strcpy(listaPokemons[5].moves[1], "Toxic");
+    strcpy(listaPokemons[5].moves[2], "Protect");
+    strcpy(listaPokemons[5].moves[3], "Spikes");
 }
 
 void defaultOwned(struct pokemon *equipoPokemon)
@@ -53,11 +78,19 @@ void defaultOwned(struct pokemon *equipoPokemon)
     equipoPokemon[0].atk = 23;
     equipoPokemon[0].def = 26;
     equipoPokemon[0].spd = 31;
+    strcpy(equipoPokemon[0].moves[0], "Thunderbolt");
+    strcpy(equipoPokemon[0].moves[1], "Surf");
+    strcpy(equipoPokemon[0].moves[2], "Hidden Power Grass");
+    strcpy(equipoPokemon[0].moves[3], "Thunder Punch");
     
     strcpy(equipoPokemon[1].name, "Flygon");
     equipoPokemon[1].atk = 30;
     equipoPokemon[1].def = 25;
     equipoPokemon[1].spd = 24;
+    strcpy(equipoPokemon[1].moves[0], "Rock Slide");
+    strcpy(equipoPokemon[1].moves[1], "Earthquake");
+    strcpy(equipoPokemon[1].moves[2], "Dragon Tail");
+    strcpy(equipoPokemon[1].moves[3], "Hyper Beam");
 }
 
 void removePokemonFromArray(struct pokemon *arrayPokemon, int pokemonIndex, int *pokemonsInShop)
@@ -68,7 +101,7 @@ void removePokemonFromArray(struct pokemon *arrayPokemon, int pokemonIndex, int 
         return;
     }
 
-    printf("Borrando a %s del array. Además hay %d pokemons en la tienda\n", arrayPokemon[pokemonIndex].name, *pokemonsInShop);
+    //printf("Borrando a %s del array. Además hay %d pokemons en la tienda\n", arrayPokemon[pokemonIndex].name, *pokemonsInShop);
     for (int i = pokemonIndex; i < *pokemonsInShop - 1; i++)
     {
         arrayPokemon[i] = arrayPokemon[i + 1];
@@ -76,7 +109,7 @@ void removePokemonFromArray(struct pokemon *arrayPokemon, int pokemonIndex, int 
 
     (*pokemonsInShop)--;
 
-    printf("Ahora %s ocupa su lugar. Ahora quedan %d pokemons en la tienda\n", arrayPokemon[pokemonIndex].name, *pokemonsInShop);
+    //printf("Ahora %s ocupa su lugar. Ahora quedan %d pokemons en la tienda\n", arrayPokemon[pokemonIndex].name, *pokemonsInShop);
 }
 
 void lineBreak(int times)
@@ -108,6 +141,11 @@ int buyPokemon(struct pokemon *listaPokemons, int pokemonIndex, int *pokemonsInS
     pokemonsComprados[*pokemonsOwned].atk = listaPokemons[pokemonIndex].atk;
     pokemonsComprados[*pokemonsOwned].def = listaPokemons[pokemonIndex].def;
     pokemonsComprados[*pokemonsOwned].spd = listaPokemons[pokemonIndex].spd;
+    for (int i = 0; i < 4; i++)
+    {
+        strcpy(pokemonsComprados[*pokemonsOwned].moves[i], listaPokemons[pokemonIndex].moves[i]);
+    }
+
     (*pokemonsOwned)++;
     removePokemonFromArray(listaPokemons, pokemonIndex, pokemonsInShop);
 }
@@ -120,6 +158,10 @@ int displayPokemonStats(struct pokemon *listaPokemons, int pokemonIndex, int *po
     printf("ATK: %d\n", listaPokemons[pokemonIndex].atk);
     printf("DEF: %d\n", listaPokemons[pokemonIndex].def);
     printf("SPEED: %d\n", listaPokemons[pokemonIndex].spd);
+    for (int i = 0; i < 4; i++)
+    {
+        printf("Move %d: %s, ", i + 1, listaPokemons[pokemonIndex].moves[i]);
+    }
     lineBreak(2);
     
     printf("-- ¿Qué deseas hacer? --\n");
@@ -235,23 +277,37 @@ int editTeamMenu(struct pokemon *pokemonsComprados, int *pokemonsOwned, struct p
             equipoPokemon[i].atk = pokemonsComprados[index].atk;
             equipoPokemon[i].def = pokemonsComprados[index].def;
             equipoPokemon[i].spd = pokemonsComprados[index].spd;
+            for (int j = 0; j < 4; j++)
+            {
+                strcpy(equipoPokemon[i].moves[j], pokemonsComprados[index].moves[j]);
+            }
             printf(equipoPokemon[i].name);
             (*pokemonsInTeam)++;
         }
     }
 }
 
-void battleSelectPokemon(struct pokemon *equipoCopy, int *teamSlots)
+void battleSelectAttack(struct pokemon *curPokemon)
+{
+    lineBreak(1);
+    printf("--- Selecciona un Ataque ---\n");
+    printf("ataque de %s: %d", curPokemon->name, curPokemon->atk);
+}
+
+struct pokemon battleSelectPokemon(struct pokemon *equipoCopy, int *teamSlots)
 {
     int option;
     displayStruct(equipoCopy, teamSlots, "--- Elige un Pokemon ---");
     scanf("%d", &option);
+    return(equipoCopy[option]);
 }
 
 void battle(struct pokemon *equipoCopy, int *teamSlots, int *option)
 {
     printf("Joven Luis te desafía a una batalla\n");
-    battleSelectPokemon(equipoCopy, teamSlots);
+    struct pokemon curPokemon = battleSelectPokemon(equipoCopy, teamSlots);
+
+    battleSelectAttack(&curPokemon);
 }
 
 void searchBattle(struct pokemon *equipoPokemon, int *pokemonsInTeam)
