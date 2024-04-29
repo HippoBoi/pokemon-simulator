@@ -14,11 +14,6 @@ int min(int a, int b) {
     return a < b ? a : b;
 }
 
-void searchBattle()
-{
-    printf("no implementado xdxdxd");
-}
-
 void defaultPokes(struct pokemon *listaPokemons)
 {
     strcpy(listaPokemons[0].name, "Aerodactyl");
@@ -94,7 +89,7 @@ void lineBreak(int times)
 
 int displayStruct(struct pokemon *listaPokemons, int *arraySize, char *headerText)
 {
-    lineBreak(4);
+    lineBreak(3);
     printf("%s\n", headerText);
     for (int i = 0; i < *arraySize; i++)
     {
@@ -246,6 +241,46 @@ int editTeamMenu(struct pokemon *pokemonsComprados, int *pokemonsOwned, struct p
     }
 }
 
+void battleSelectPokemon(struct pokemon *equipoCopy, int *teamSlots)
+{
+    int option;
+    displayStruct(equipoCopy, teamSlots, "--- Elige un Pokemon ---");
+    scanf("%d", &option);
+}
+
+void battle(struct pokemon *equipoCopy, int *teamSlots, int *option)
+{
+    printf("Joven Luis te desafía a una batalla\n");
+    battleSelectPokemon(equipoCopy, teamSlots);
+}
+
+void searchBattle(struct pokemon *equipoPokemon, int *pokemonsInTeam)
+{   
+    int option = -1;
+    lineBreak(2);
+    printf("Elige una dificultad\n1 .- Fácil \n2 .- Normal \n3 .- Difícil \n");
+    scanf("%d", &option);
+
+    if (option != 1 && option != 2 && option != 3)
+    {
+        printf("\nOpción no válida, cancelando.\n");
+        return;
+    }
+
+    struct pokemon equipoCopy[6];
+    int teamSlots = *pokemonsInTeam;
+
+    for (int i = 0; i < *pokemonsInTeam; i++)
+    {
+        strcpy(equipoCopy[i].name, equipoPokemon[i].name);
+        equipoCopy[i].atk = equipoPokemon[i].atk;
+        equipoCopy[i].def = equipoPokemon[i].def;
+        equipoCopy[i].spd = equipoPokemon[i].spd;
+    }
+
+    battle(equipoCopy, &teamSlots, &option);
+}
+
 int main()
 {   
     int close = 0;
@@ -289,7 +324,7 @@ int main()
             break;
             
             case 4:
-            searchBattle();
+            searchBattle(equipoPokemon, &pokemonsInTeam);
             break;
             
             default:
